@@ -1,21 +1,23 @@
 module odyssey_top
   (
-   input wire       clk_25mhz,
-   input wire [6:0] btn,
+   input wire        clk_25mhz,
+   input wire [6:0]  btn,
    output wire [7:0] led,
    
-   output wire      wifi_en,
-   output wire      wifi_gpio0,
+   output wire       wifi_en,
+   output wire       wifi_gpio0,
    
-   output wire      oled_csn,
-   output wire      oled_clk,
-   output wire      oled_mosi,
-   output wire      oled_dc,
-   output wire      oled_resn
+   output wire       oled_csn,
+   output wire       oled_clk,
+   output wire       oled_mosi,
+   output wire       oled_dc,
+   output wire       oled_resn,
+
+   output wire       usb_fpga_pu_dp, usb_fpga_pu_dn,
+   input wire        usb_fpga_bd_dp, usb_fpga_bd_dn,
    );
    assign wifi_en = 1;
    assign wifi_gpio0 = btn[0];
-   assign led = 0;
 
    wire             resetq = btn[0];
    localparam       MHZ = 25;
@@ -40,8 +42,18 @@ module odyssey_top
       );
    wire           clk_lcd = clocks[0];
    wire           clk_pixel = clocks[1];
-   
-   // ==================
+
+   // === keyboard ==============
+   // enable pull ups on both D+ and D-
+   assign usb_fpga_pu_dp = 1'b1;
+   assign usb_fpga_pu_dn = 1'b1;
+
+   wire           ps2clk  = usb_fpga_bd_dp;
+   wire           ps2data = usb_fpga_bd_dn;
+
+   ps2kbd kbd(clk_25mhz, ps2clk, ps2data, led, , );
+
+   // === display ===============
    
    wire           S_reset = ~btn[0];
    

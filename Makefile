@@ -9,11 +9,14 @@ CONSTRAINTS = ulx3s_v20_segpdi.lpf
 TOP_MODULE = odyssey_top
 PREFIX = verilog
 TOP_MODULE_FILE = $(PREFIX)/$(TOP_MODULE).v
+
 VERILOG_FILES = \
 $(TOP_MODULE_FILE) \
 $(PREFIX)/ecp5pll.sv \
 $(PREFIX)/emhard-vga.v \
 $(PREFIX)/lcd_video.v \
+$(PREFIX)/odyssey.v \
+$(PREFIX)/ps2kbd.v \
 
 # *.vhd those files will be converted to *.v files with vhdl2vl (warning overwriting/deleting)
 VHDL_FILES = \
