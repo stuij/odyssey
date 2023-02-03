@@ -3,12 +3,14 @@
 // Preview' installed. This allows you to search for and highlight specific
 // nodes. With the added annotations, this can be an aide to understand how the
 // components interact.
+
 digraph odyssey2 {
 node [shape=record];
 graph [rankdir=LR, center=true];
 overlap=compress;
 //ranksep=3;
 
+/// components
 subgraph cluster2 {
     j2_9 [label="9"];
     j2_38 [label="38"];
@@ -207,6 +209,28 @@ subgraph cluster11 {
     tooltip = "gate matrix";
 }
 
+subgraph cluster10 {
+    // only showing ports that connect to rest of system
+    // left
+    j10_3 [label="3"];
+    // right
+    j10_7 [label="7"];
+
+    label = "j10 horiz sync generator";
+    tooltip = "horiz sync generator";
+}
+
+subgraph cluster9 {
+    // only showing ports that connect to rest of system
+    // left
+    j9_3 [label="3"];
+    // right
+    j9_7 [label="7"];
+
+    label = "j9 vert sync generator";
+    tooltip = "vert sync generator";
+}
+
 subgraph cluster16 {
     // left
     j16_10 [label="10"];
@@ -258,8 +282,7 @@ subgraph cluster101 {
 }
 
 source_j3 [label="5.6v"];
-source_j5 [label="5.6v"];
-drain;
+source_j5 [label="5.6v"];ß
 crowbar_reset;
 ext_power_adapter;
 regulator;
@@ -272,6 +295,7 @@ player_2_height;
 
 j4_3 -> j2_9;
 
+/// inputs
 // both inputs go to gate matrix and english flip-flops but on different ports
 // within the gate matrix I'm assuming either the output of english flip-flop
 // 3 or 5 is used, which I presume is the enable for either player 1 or 2, but
@@ -285,14 +309,36 @@ j3_2 -> { j2_15; j11_2 };
 
 {j4_4; j3_4} -> j2_38;
 
+j4_11 -> j6_9 [label="horiz pos"];
+j3_11 -> {j5_9; j2_28} [label="horiz pos"];
+j4_8 -> j6_2 [label="vert pos"];
+j3_8 -> j5_2 [label="vert pos"];
 
-// reset
+// the voltage that comes from/goes to to english pot of the
+// controller input. which possibly already holds a height value on the charge
+//  that the english can vary between. as in, it's not just on or off.
+j4_5 -> j15_2;
+j3_5 -> j15_1;
+j4_6 -> j15_7;
+j3_6 -> j15_8;
+
+// controller english output
+{j4_7; j3_7} -> j2_42;
+// on paddles this is vert
+{j4_7; j3_7} -> {j8_2};
+j2_42 -> j8_2;
+// funnily on one of the game cards j2_42 goes to j2_44,
+// so both are then connected to ball vert
+j2_44 -> j8_2;
+
+/// reset
 {j4_9; j3_9} -> crowbar_reset [label="reset"];
 crowbar_reset -> {j2_23; w6} [label="reset"];
 // don't understand this part of circuit, so not sure what relation is
 // diode with third line coming out
 { j2_18; j2_27; j2_33} -> crowbar_reset [color=deeppink, label="reset<?>"];
 
+/// power
 // player 2 is always on, so always gets power from board.
 // not from j2 like the rest.
 source_j3 -> j3_1 [label="5.6v"];
@@ -308,7 +354,7 @@ j2_6 -> { j2_8; j2_10; j2_14; j2_16; j2_20; j2_22;} [label="5.6v"];
 j2_8 -> {j4_1; j6_6; player_1_width; player_1_height; } [label="j2:8 5.6v"];
 j2_20 -> {j15_10; j8_6; ball_width; ball_height} [label="j2:20 5.6v"];
 
-// j2 internal connections
+/// j2 internal connections
 j2_30 -> j2_34;
 j2_31 -> j2_39;
 j2_35 -> j2_37;
@@ -333,5 +379,5 @@ j2_34 -> j2_36 [color=cornflowerblue];
 // game card 9
 j2_21 -> j2_23 [color=darkgray];
 // game card 10
-j2_23 -> j2_25 [color=aqua];
+ßj2_23 -> j2_25 [color=aqua];
 }
